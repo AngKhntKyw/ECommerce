@@ -2,7 +2,7 @@
 //
 //import com.example.ecommerce.model.CarouselImage;
 //import com.example.ecommerce.model.Category;
-//import com.example.ecommerce.model.PaymentMethod;
+//import com.example.ecommerce.model.PaymentMethod;s
 //import com.example.ecommerce.model.Product;
 //import com.example.ecommerce.model.Role;
 //import com.example.ecommerce.model.User;

@@ -38,16 +38,16 @@
 
                 <!-- Quantity Controls -->
                 <div class="flex items-center gap-3 mr-6">
-                    <!-- Decrement -->
-                    <a th:href="@{/cart/remove-one/{id}(id=${item.product.id})}" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition">
+                    <!-- Decrement (Points to new decrease endpoint) -->
+                    <a th:href="@{/cart/decrease/{id}(id=${item.product.id})}" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition">
                         <i data-lucide="minus" class="w-4 h-4"></i>
                     </a>
 
                     <span class="font-bold text-gray-900 w-6 text-center" th:text="${item.quantity}">1</span>
 
-                    <!-- Increment (Disabled if stock reached) -->
+                    <!-- Increment (Points to new increase endpoint, Disabled if stock reached) -->
                     <div th:if="${item.quantity < item.product.stockQuantity}">
-                        <a th:href="@{/cart/add/{id}(id=${item.product.id})}" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition">
+                        <a th:href="@{/cart/increase/{id}(id=${item.product.id})}" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition">
                             <i data-lucide="plus" class="w-4 h-4"></i>
                         </a>
                     </div>
@@ -58,7 +58,7 @@
                     </div>
                 </div>
 
-                <!-- Remove Button -->
+                <!-- Remove Button (Removes all instances) -->
                 <div>
                     <a th:href="@{/cart/remove/{id}(id=${item.product.id})}" class="text-red-500 hover:bg-red-50 p-2 rounded-full transition-colors flex items-center gap-1 text-sm font-medium" title="Remove all">
                         <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -67,7 +67,7 @@
             </div>
         </div>
 
-        <!-- Payment Section (Same as before) -->
+        <!-- Payment Section -->
         <form th:action="@{/cart/checkout}" method="post" class="bg-white shadow rounded-lg overflow-hidden border p-6">
             <h3 class="text-lg font-bold text-gray-800 mb-4">Payment Method</h3>
             <div class="space-y-3 mb-6">

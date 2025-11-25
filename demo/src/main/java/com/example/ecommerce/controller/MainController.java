@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MainController {
     private final ProductService productService;
-    private final ProductRepository productRepo;
+    private final ProductRepository productRepo; // Using Repo directly for specialized queries
     private final UserService userService;
     private final OrderService orderService;
     private final ShoppingCartService cart;
@@ -47,8 +47,15 @@ public class MainController {
             products = productService.getAllActiveProducts();
         }
 
+        // 1. Carousel
         model.addAttribute("carouselImages", carouselService.getAllImages());
+
+        // 2. New Arrivals
+        model.addAttribute("newArrivals", productRepo.findTop10ByIsActiveTrueOrderByIdDesc());
+
+        // 3. Popular Products
         model.addAttribute("popularProducts", productRepo.findBySoldQuantityGreaterThanEqualAndIsActiveTrueOrderBySoldQuantityDesc(6));
+
         model.addAttribute("categories", categories);
         model.addAttribute("products", products);
         return "index";
@@ -80,8 +87,7 @@ public class MainController {
         return "profile";
     }
 
-    // --- Cart Logic ---
-
+    // Standard Add to Cart (Redirets to Shop/Home)
     @GetMapping("/cart/add/{id}")
     public String addToCart(@PathVariable Long id,
                             @RequestParam(required = false) Long categoryId,
@@ -104,18 +110,13 @@ public class MainController {
             }
         }
 
-        // If HTMX request, return partial fragment to update UI without reload
         if ("true".equals(htmxRequest)) {
             if (isError) model.addAttribute("error", message);
             else model.addAttribute("success", message);
-
-            // Add cartCount to model manually since we are returning a fragment directly
             model.addAttribute("cartCount", cart.getSize());
-
             return "fragments :: cart-update";
         }
 
-        // Fallback for non-JS
         if (isError) redirectAttributes.addFlashAttribute("error", message);
         else redirectAttributes.addFlashAttribute("success", message);
 
@@ -123,16 +124,31 @@ public class MainController {
         return "redirect:/";
     }
 
-    @GetMapping("/cart/remove/{id}")
-    public String removeFromCart(@PathVariable Long id) {
-        cart.removeItem(id);
+    // NEW: Specific method for Cart Page Increase (Redirects to Cart)
+    @GetMapping("/cart/increase/{id}")
+    public String increaseCartItem(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Product product = productService.getProductById(id).orElse(null);
+        if (product != null) {
+            int currentInCart = cart.getCount(id);
+            if (currentInCart < product.getStockQuantity()) {
+                cart.addItem(product);
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Cannot add more. Max stock reached for " + product.getName());
+            }
+        }
         return "redirect:/cart";
     }
 
-    // New route to remove just ONE instance of an item (for decrement button)
-    @GetMapping("/cart/remove-one/{id}")
-    public String removeOneFromCart(@PathVariable Long id) {
-        cart.removeOneItem(id); // Ensure this method exists in Service or implement logic here
+    // NEW: Specific method for Cart Page Decrease (Redirects to Cart)
+    @GetMapping("/cart/decrease/{id}")
+    public String decreaseCartItem(@PathVariable Long id) {
+        cart.removeOneItem(id);
+        return "redirect:/cart";
+    }
+
+    @GetMapping("/cart/remove/{id}")
+    public String removeFromCart(@PathVariable Long id) {
+        cart.removeItem(id);
         return "redirect:/cart";
     }
 
@@ -143,7 +159,6 @@ public class MainController {
 
         List<CartItemDto> cartDisplayItems = new ArrayList<>();
         for (Map.Entry<Product, Long> entry : groupedItems.entrySet()) {
-            // Now passing the Product object which has stockQuantity
             cartDisplayItems.add(new CartItemDto(entry.getKey(), entry.getValue().intValue()));
         }
 

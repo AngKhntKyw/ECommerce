@@ -2,11 +2,8 @@ package com.example.ecommerce.repository;
 
 import com.example.ecommerce.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
-@Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     // Admin methods
     List<Product> findByCategoryId(Long categoryId);
@@ -18,6 +15,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByCategoryIdAndIsActiveTrue(Long categoryId);
     List<Product> findByIsActiveTrueOrderByIdDesc();
 
-    // NEW: Find Most Selling (Sold > 5)
+    // Popular Products
     List<Product> findBySoldQuantityGreaterThanEqualAndIsActiveTrueOrderBySoldQuantityDesc(Integer quantity);
+
+    // NEW: New Arrivals (Top 10 Newest Active Products)
+    List<Product> findTop10ByIsActiveTrueOrderByIdDesc();
 }
