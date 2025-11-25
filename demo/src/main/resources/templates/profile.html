@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: html}">
+<body th:fragment="content">
+
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+        <div class="px-6 py-8 border-b bg-gray-50 text-center">
+            <div class="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold">
+                <span th:text="${#strings.substring(user.name,0,1)}">U</span>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-800" th:text="${user.name}">User Name</h1>
+            <p class="text-gray-500" th:text="${user.email}">user@example.com</p>
+        </div>
+
+        <div class="p-8 space-y-6">
+            <div>
+                <h3 class="text-sm font-bold text-gray-500 uppercase mb-2">Account Details</h3>
+                <div class="grid grid-cols-1 gap-4 text-sm">
+                    <div class="flex justify-between border-b pb-2">
+                        <span class="text-gray-600">Full Name</span>
+                        <span class="font-medium text-gray-900" th:text="${user.name}">Name</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-2">
+                        <span class="text-gray-600">Email Address</span>
+                        <span class="font-medium text-gray-900" th:text="${user.email}">Email</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-2">
+                        <span class="text-gray-600">Role</span>
+                        <span class="font-medium text-gray-900" th:text="${user.role}">User</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-sm font-bold text-gray-500 uppercase mb-2">Shipping Address</h3>
+                <div class="bg-gray-50 p-4 rounded-lg border text-gray-700 leading-relaxed">
+                    <i data-lucide="map-pin" class="w-4 h-4 inline mr-2 text-indigo-500"></i>
+                    <span th:text="${user.address}">123 Main St, Yangon</span>
+                </div>
+            </div>
+
+            <div class="pt-4 flex justify-center">
+                <a href="/orders" class="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition shadow-md flex items-center gap-2">
+                    <i data-lucide="shopping-bag" class="w-4 h-4"></i> View Order History
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

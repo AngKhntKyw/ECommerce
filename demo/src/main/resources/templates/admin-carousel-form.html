@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: html}">
+<body th:fragment="content">
+
+<div class="flex min-h-[calc(100vh-4rem)]">
+    <div th:replace="~{fragments :: sidebar}"></div>
+
+    <main class="flex-1 p-8 bg-gray-50 overflow-y-auto flex justify-center">
+        <div class="w-full max-w-xl">
+            <div class="bg-white p-8 rounded-xl shadow-sm border">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800" th:text="${carouselImage.id == null} ? 'Add Carousel Image' : 'Update Carousel Image'">
+                    Carousel Form
+                </h2>
+
+                <form th:action="@{/admin/carousel}" method="post" th:object="${carouselImage}" class="space-y-6">
+                    <input type="hidden" th:field="*{id}">
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+                        <input type="text" th:field="*{imageUrl}" placeholder="https://example.com/banner.jpg" class="w-full p-2.5 border rounded-lg" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Title / Alt Text (Optional)</label>
+                        <input type="text" th:field="*{title}" placeholder="Summer Sale" class="w-full p-2.5 border rounded-lg">
+                    </div>
+
+                    <div class="flex gap-4 pt-2">
+                        <button type="submit" class="flex-1 bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition shadow-md">Save Image</button>
+                        <a href="/admin/carousel" class="px-6 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

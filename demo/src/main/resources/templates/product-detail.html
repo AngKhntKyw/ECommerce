@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:replace="~{layout :: html}">
+<body th:fragment="content">
+
+<div class="max-w-6xl mx-auto">
+
+    <div class="mb-6 text-sm text-gray-500">
+        <a href="/" class="hover:text-indigo-600">Home</a>
+        <span class="mx-2">/</span>
+        <span th:text="${product.category.name}">Category</span>
+        <span class="mx-2">/</span>
+        <span class="text-gray-900 font-medium" th:text="${product.name}">Product</span>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2">
+
+            <div class="bg-gray-100 h-96 md:h-auto flex items-center justify-center p-8">
+                <img th:src="${product.imageUrl}" class="max-h-full max-w-full object-contain rounded-lg shadow-md hover:scale-105 transition-transform duration-500">
+            </div>
+
+            <div class="p-8 md:p-12 flex flex-col justify-center">
+                <span class="text-indigo-600 font-bold text-sm uppercase tracking-wider mb-2" th:text="${product.category.name}">Category</span>
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4" th:text="${product.name}">Product Name</h1>
+
+                <p class="text-gray-600 leading-relaxed mb-8 text-lg" th:text="${product.description}">Description...</p>
+
+                <div class="flex items-end gap-4 mb-8">
+                    <div th:if="${product.salePrice != null}">
+                        <span class="text-3xl font-bold text-red-600" th:text="'MMK ' + ${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 0, 'POINT')}">MMK 80</span>
+                        <span class="text-xl text-gray-400 line-through ml-2" th:text="'MMK ' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">MMK 100</span>
+                    </div>
+                    <div th:unless="${product.salePrice != null}">
+                        <span class="text-3xl font-bold text-gray-900" th:text="'MMK ' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">MMK 100</span>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <span th:if="${product.stockQuantity > 0}" class="flex items-center gap-2 text-green-600 font-medium bg-green-50 w-fit px-3 py-1 rounded-full">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i> In Stock (<span th:text="${product.stockQuantity}">10</span>)
+                    </span>
+                    <span th:if="${product.stockQuantity < 1}" class="flex items-center gap-2 text-red-600 font-medium bg-red-50 w-fit px-3 py-1 rounded-full">
+                        <i data-lucide="x-circle" class="w-4 h-4"></i> Out of Stock
+                    </span>
+                </div>
+
+                <div class="flex gap-4">
+                    <div sec:authorize="!hasRole('ADMIN')" class="w-full">
+                        <a th:if="${product.stockQuantity > 0}" th:href="@{/cart/add/{id}(id=${product.id})}" class="w-full block text-center bg-gray-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-indigo-600 transition-all shadow-lg transform hover:-translate-y-1">
+                            Add to Cart
+                        </a>
+                        <button th:if="${product.stockQuantity < 1}" class="w-full bg-gray-200 text-gray-400 py-4 rounded-xl font-bold text-lg cursor-not-allowed">Sold Out</button>
+                    </div>
+
+                    <div sec:authorize="hasRole('ADMIN')" class="w-full">
+                        <a th:href="@{/admin/product/edit/{id}(id=${product.id})}" class="w-full block text-center border-2 border-gray-900 text-gray-900 py-4 rounded-xl font-bold text-lg hover:bg-gray-900 hover:text-white transition-all">
+                            Edit Product
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-12" th:if="${not #lists.isEmpty(relatedProducts)}">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6">Related Products</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div th:each="rp : ${relatedProducts}" th:if="${rp.id != product.id}" class="bg-white p-4 rounded-xl shadow-sm border hover:shadow-md transition">
+                <a th:href="@{/product/{id}(id=${rp.id})}">
+                    <img th:src="${rp.imageUrl}" class="w-full h-32 object-cover rounded-md mb-3">
+                    <h4 class="font-bold text-gray-900 truncate" th:text="${rp.name}">Name</h4>
+                    <span class="text-indigo-600 font-medium" th:text="'MMK ' + ${#numbers.formatDecimal(rp.price, 0, 'COMMA', 0, 'POINT')}">MMK 0</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

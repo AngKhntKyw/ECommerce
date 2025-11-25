@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: html}">
+<body th:fragment="content">
+
+<div class="max-w-5xl mx-auto">
+
+    <div th:if="${param.success}" class="mb-8 bg-green-50 border border-green-200 text-green-800 rounded-xl p-4 flex items-center gap-3 animate-fade-in">
+        <div class="bg-green-100 p-2 rounded-full">
+            <i data-lucide="check" class="w-6 h-6 text-green-600"></i>
+        </div>
+        <div>
+            <h3 class="font-bold">Order Placed Successfully!</h3>
+            <p class="text-sm text-green-700">Thank you for your purchase. You can track your status below.</p>
+        </div>
+    </div>
+
+    <h1 class="text-3xl font-bold mb-6 text-gray-800">My Orders</h1>
+
+    <div th:if="${#lists.isEmpty(orders)}" class="text-center py-20 bg-white rounded-xl shadow-sm border">
+        <i data-lucide="package-open" class="w-16 h-16 mx-auto text-gray-300 mb-4"></i>
+        <p class="text-gray-500 text-lg">You haven't placed any orders yet.</p>
+        <a href="/" class="mt-4 inline-block text-indigo-600 font-medium hover:underline">Start Shopping</a>
+    </div>
+
+    <div class="space-y-6" th:unless="${#lists.isEmpty(orders)}">
+        <div th:each="order : ${orders}" class="bg-white border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+            <div class="bg-gray-50 px-6 py-4 border-b flex flex-wrap justify-between items-center gap-4">
+                <div class="flex gap-6 text-sm text-gray-600">
+                    <div>
+                        <span class="block font-bold text-gray-900">Order Placed</span>
+                        <span th:text="${#temporals.format(order.orderDate, 'MMM dd, yyyy')}">Date</span>
+                    </div>
+                    <div>
+                        <span class="block font-bold text-gray-900">Total</span>
+                        <span th:text="'MMK ' + ${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')}">MMK 0</span>
+                    </div>
+                    <div>
+                        <span class="block font-bold text-gray-900">Ship To</span>
+                        <span th:text="${order.user.name}">User</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-500" th:text="'Order #' + ${order.id}">#123</span>
+                    <span th:if="${order.status == 'Pending'}" class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold">Pending</span>
+                    <span th:if="${order.status == 'Confirmed'}" class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">Confirmed</span>
+                    <span th:if="${order.status == 'Canceled'}" class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold">Canceled</span>
+                </div>
+            </div>
+
+            <div class="p-6">
+                <h4 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <span th:text="${order.status == 'Confirmed' ? 'Arriving Soon' : 'Order Processing'}">Status</span>
+                    <span class="text-sm font-normal text-gray-500" th:text="'via ' + ${order.paymentMethod}">via PayPal</span>
+                </h4>
+
+                <div class="space-y-4">
+                    <div th:each="item : ${order.items}" class="flex items-start gap-4">
+                        <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden border flex-shrink-0">
+                            <img th:src="${item.product.imageUrl}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1">
+                            <h5 class="font-bold text-indigo-600 hover:underline">
+                                <a th:href="@{/product/{id}(id=${item.product.id})}" th:text="${item.product.name}">Product Name</a>
+                            </h5>
+                            <p class="text-sm text-gray-500 line-clamp-1" th:text="${item.product.description}">Desc</p>
+                            <div class="mt-2 text-sm font-medium text-gray-900">
+                                <span th:text="'MMK ' + ${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}">MMK 100</span>
+                                <span class="text-gray-400">x</span>
+                                <span th:text="${item.quantity}">1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

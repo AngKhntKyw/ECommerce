@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<aside th:fragment="sidebar" class="w-64 bg-gray-900 text-gray-300 flex-shrink-0 hidden md:block min-h-screen shadow-xl">
+    <div class="p-6 sticky top-16">
+        <h2 class="text-2xl font-bold mb-8 text-white tracking-wide">Admin Panel</h2>
+        <nav class="space-y-3">
+            <a href="/admin/dashboard" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-gray-800 hover:text-white" th:classappend="${activePage == 'dashboard'} ? 'bg-indigo-600 text-white' : ''"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</a>
+            <a href="/admin/carousel" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-gray-800 hover:text-white" th:classappend="${activePage == 'carousel'} ? 'bg-indigo-600 text-white' : ''"><i data-lucide="image" class="w-5 h-5"></i> Carousel</a>
+            <a href="/admin/products" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-gray-800 hover:text-white" th:classappend="${activePage == 'products'} ? 'bg-indigo-600 text-white' : ''"><i data-lucide="package" class="w-5 h-5"></i> Products</a>
+            <a href="/admin/categories" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-gray-800 hover:text-white" th:classappend="${activePage == 'categories'} ? 'bg-indigo-600 text-white' : ''"><i data-lucide="list" class="w-5 h-5"></i> Categories</a>
+            <a href="/admin/payments" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-gray-800 hover:text-white" th:classappend="${activePage == 'payments'} ? 'bg-indigo-600 text-white' : ''"><i data-lucide="credit-card" class="w-5 h-5"></i> Payments</a>
+            <a href="/admin/orders" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-gray-800 hover:text-white" th:classappend="${activePage == 'orders'} ? 'bg-indigo-600 text-white' : ''"><i data-lucide="shopping-bag" class="w-5 h-5"></i> Orders</a>
+        </nav>
+    </div>
+</aside>
+
+<th:block th:fragment="cart-update">
+    <a id="cart-nav-link" href="/cart" class="relative text-gray-700 hover:text-indigo-600">
+        <i data-lucide="shopping-cart"></i>
+        <span th:if="${cartCount > 0}"
+              class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-sm"
+              th:text="${cartCount}">
+            0
+        </span>
+    </a>
+
+    <div id="notification-container" hx-swap-oob="beforeend">
+
+        <div th:if="${success}" class="bg-green-100 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center shadow-lg transition-all duration-500 transform translate-x-0"
+             role="alert"
+             x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)">
+            <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i>
+            <span th:text="${success}">Success</span>
+        </div>
+
+        <div th:if="${error}" class="bg-red-100 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-center shadow-lg transition-all duration-500 transform translate-x-0"
+             role="alert"
+             x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)">
+            <i data-lucide="alert-circle" class="w-5 h-5 mr-2"></i>
+            <span th:text="${error}">Error</span>
+        </div>
+    </div>
+</th:block>
+
+</body>
+</html>

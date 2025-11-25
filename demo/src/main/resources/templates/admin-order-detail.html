@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: html}">
+<body th:fragment="content">
+
+<div class="flex min-h-[calc(100vh-4rem)]">
+    <div th:replace="~{fragments :: sidebar}"></div>
+
+    <main class="flex-1 p-8 bg-gray-50 overflow-y-auto flex justify-center">
+        <div class="w-full max-w-4xl">
+
+            <div class="mb-6 flex items-center justify-between">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                    <a href="/admin/orders" class="hover:text-indigo-600 flex items-center gap-1">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Orders
+                    </a>
+                    <span>/</span>
+                    <span class="text-gray-900 font-medium" th:text="'Order #' + ${order.id}">#1</span>
+                </div>
+
+                <div>
+                    <span th:if="${order.status == 'Pending'}" class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4"></i> Pending</span>
+                    <span th:if="${order.status == 'Confirmed'}" class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i> Confirmed</span>
+                    <span th:if="${order.status == 'Canceled'}" class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i> Canceled</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border overflow-hidden mb-6">
+                <div class="p-6 border-b bg-gray-50 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide font-bold mb-1">Customer</p>
+                        <h3 class="text-lg font-bold text-gray-800" th:text="${order.user.name}">Customer Name</h3>
+                        <p class="text-gray-500 text-sm" th:text="${order.user.email}">email@example.com</p>
+                    </div>
+
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide font-bold mb-1">Shipping Details</p>
+                        <div class="flex items-start gap-2 text-gray-700 text-sm">
+                            <i data-lucide="map-pin" class="w-4 h-4 mt-0.5 text-indigo-500 flex-shrink-0"></i>
+                            <span th:text="${order.user.address != null} ? ${order.user.address} : 'No address provided'">
+                                123 Main St, Yangon
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="text-left md:text-right">
+                        <p class="text-xs text-gray-500 uppercase tracking-wide font-bold mb-1">Payment & Date</p>
+                        <div class="flex items-center md:justify-end gap-2">
+                            <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded" th:text="${order.paymentMethod != null} ? ${order.paymentMethod} : 'Unknown'">VISA</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-1" th:text="${#temporals.format(order.orderDate, 'MMM dd, yyyy HH:mm')}">Date</p>
+                    </div>
+                </div>
+
+                <div class="p-0">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-100 text-gray-600 border-b">
+                        <tr>
+                            <th class="p-4">Product Details</th>
+                            <th class="p-4 text-center">Unit Price</th>
+                            <th class="p-4 text-center">Qty</th>
+                            <th class="p-4 text-right">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                        <tr th:each="item : ${order.items}">
+                            <td class="p-4 flex items-center gap-4">
+                                <div class="w-12 h-12 bg-gray-100 rounded border overflow-hidden flex-shrink-0">
+                                    <img th:src="${item.product.imageUrl}" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-900" th:text="${item.product.name}">Product Name</div>
+                                    <div class="text-xs text-gray-500" th:text="${item.product.category.name}">Category</div>
+                                </div>
+                            </td>
+                            <td class="p-4 text-center text-gray-600" th:text="'MMK ' + ${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}">MMK 100</td>
+                            <td class="p-4 text-center font-bold" th:text="'x' + ${item.quantity}">x2</td>
+                            <td class="p-4 text-right font-medium text-gray-900" th:text="'MMK ' + ${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 0, 'POINT')}">MMK 200</td>
+                        </tr>
+                        </tbody>
+                        <tfoot class="bg-gray-50">
+                        <tr>
+                            <td colspan="3" class="p-4 text-right font-bold text-gray-600">Total Amount:</td>
+                            <td class="p-4 text-right font-bold text-xl text-indigo-600" th:text="'MMK ' + ${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')}">MMK 500</td>
+                        </tr>
+                        <tr class="text-xs text-gray-400">
+                            <td colspan="3" class="p-2 text-right">Estimated Profit:</td>
+                            <td class="p-2 text-right" th:text="'MMK ' + ${#numbers.formatDecimal(order.totalAmount - (order.totalCost != null ? order.totalCost : 0), 0, 'COMMA', 0, 'POINT')}">MMK 50</td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div th:if="${order.status == 'Pending'}" class="flex gap-4 justify-end">
+                <form th:action="@{/admin/order/{id}/status(id=${order.id})}" method="post">
+                    <input type="hidden" name="status" value="Canceled">
+                    <button type="submit" class="bg-white border border-red-300 text-red-600 px-6 py-2.5 rounded-lg font-medium hover:bg-red-50 transition shadow-sm flex items-center gap-2">
+                        <i data-lucide="x"></i> Cancel Order
+                    </button>
+                </form>
+
+                <form th:action="@{/admin/order/{id}/status(id=${order.id})}" method="post">
+                    <input type="hidden" name="status" value="Confirmed">
+                    <button type="submit" class="bg-green-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-green-700 transition shadow-md flex items-center gap-2">
+                        <i data-lucide="check"></i> Confirm Order
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

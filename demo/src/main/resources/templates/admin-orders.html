@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: html}">
+<body th:fragment="content">
+
+<div class="flex min-h-[calc(100vh-4rem)]">
+    <div th:replace="~{fragments :: sidebar}"></div>
+
+    <main class="flex-1 p-8 bg-gray-50 overflow-y-auto">
+        <section>
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Customer Orders</h2>
+
+            <div th:if="${#lists.isEmpty(orders)}" class="bg-white p-10 rounded-xl shadow-sm border text-center text-gray-500">
+                <i data-lucide="inbox" class="w-12 h-12 mx-auto mb-3 text-gray-300"></i>
+                <p>No orders found.</p>
+            </div>
+
+            <div th:unless="${#lists.isEmpty(orders)}" class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-gray-100 border-b">
+                    <tr>
+                        <th class="p-4">Order ID</th>
+                        <th class="p-4">Status</th>
+                        <th class="p-4">Customer</th>
+                        <th class="p-4">Date</th>
+                        <th class="p-4">Total</th>
+                        <th class="p-4 text-right">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="o : ${orders}" class="border-b last:border-0 hover:bg-gray-50 transition-colors">
+                        <td class="p-4 font-mono text-gray-500" th:text="${o.id}">1</td>
+                        <td class="p-4">
+                            <span th:if="${o.status == 'Pending'}" class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs font-bold">Pending</span>
+                            <span th:if="${o.status == 'Confirmed'}" class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">Confirmed</span>
+                            <span th:if="${o.status == 'Canceled'}" class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">Canceled</span>
+                        </td>
+                        <td class="p-4">
+                            <div class="font-medium text-gray-900" th:text="${o.user.name}">Name</div>
+                            <div class="text-xs text-gray-500" th:text="${o.user.email}">Email</div>
+                        </td>
+                        <td class="p-4" th:text="${#temporals.format(o.orderDate, 'MMM dd, HH:mm')}">Date</td>
+                        <td class="p-4 font-bold text-green-600" th:text="'MMK ' + ${#numbers.formatDecimal(o.totalAmount, 0, 'COMMA', 0, 'POINT')}">MMK 0</td>
+                        <td class="p-4 text-right">
+                            <a th:href="@{/admin/order/{id}(id=${o.id})}" class="text-indigo-600 hover:text-indigo-900 font-medium">View Details</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: html}">
+<body th:fragment="content">
+
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Shopping Cart</h1>
+
+    <div th:if="${#lists.isEmpty(cartItems)}" class="text-center py-20 bg-white rounded-xl shadow-sm border">
+        <i data-lucide="shopping-cart" class="w-16 h-16 mx-auto text-gray-300 mb-4"></i>
+        <p class="text-gray-500 text-lg">Your cart is empty.</p>
+        <a href="/" class="mt-4 inline-block text-indigo-600 font-medium hover:underline">Continue Shopping</a>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(cartItems)}">
+
+        <div class="bg-white shadow rounded-lg overflow-hidden border mb-6">
+            <div th:each="item : ${cartItems}" class="flex items-center justify-between p-6 border-b last:border-0">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 bg-gray-100 rounded-md overflow-hidden">
+                        <img th:src="${item.product.imageUrl}" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-800" th:text="${item.product.name}">Name</h3>
+                        <div class="text-gray-500 text-sm flex items-center gap-2">
+                            <span th:text="'MMK ' + ${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')}">Price</span>
+                            <span class="px-2 py-0.5 bg-gray-100 rounded text-gray-700 font-bold text-xs" th:text="'x' + ${item.quantity}">x2</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <a th:href="@{/cart/remove/{id}(id=${item.product.id})}" class="text-red-500 hover:bg-red-50 p-2 rounded-full transition-colors flex items-center gap-1 text-sm font-medium">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i> Remove
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <form th:action="@{/cart/checkout}" method="post" class="bg-white shadow rounded-lg overflow-hidden border p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">Payment Method</h3>
+            <div class="space-y-3 mb-6">
+                <div th:if="${#lists.isEmpty(paymentMethods)}" class="text-red-500 text-sm bg-red-50 p-3 rounded">
+                    <i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i> No active payment methods available.
+                </div>
+                <div th:each="pm : ${paymentMethods}" class="relative">
+                    <label class="flex items-center p-4 border rounded-xl hover:bg-gray-50 cursor-pointer transition-all has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50">
+                        <input type="radio" name="paymentMethod" th:value="${pm.name}" class="peer w-5 h-5 text-indigo-600 border-gray-300 focus:ring-indigo-500" required onchange="document.getElementById('checkoutBtn').disabled = false; document.getElementById('checkoutBtn').classList.remove('opacity-50', 'cursor-not-allowed');">
+                        <div class="ml-4 flex items-center gap-4 flex-1">
+                            <img th:if="${pm.imageUrl}" th:src="${pm.imageUrl}" class="w-10 h-10 object-contain" alt="Logo">
+                            <div th:unless="${pm.imageUrl}" class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center text-gray-500">
+                                <i data-lucide="credit-card"></i>
+                            </div>
+                            <div>
+                                <span class="block font-bold text-gray-900" th:text="${pm.name}">Credit Card</span>
+                                <span class="block text-sm text-gray-500 font-mono" th:text="${pm.phoneNumber}">09...</span>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center border-t pt-6">
+                <div class="text-xl font-bold text-gray-800">
+                    Total: <span th:text="'MMK ' + ${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')}">0</span>
+                </div>
+                <button id="checkoutBtn" type="submit" disabled class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold shadow-md transition-all opacity-50 cursor-not-allowed hover:bg-indigo-700">
+                    Checkout
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+</body>
+</html>

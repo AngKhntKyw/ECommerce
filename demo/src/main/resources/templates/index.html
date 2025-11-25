@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:replace="~{layout :: html}">
+<body th:fragment="content">
+
+<div th:if="${not #lists.isEmpty(carouselImages)}" class="mb-12 relative rounded-2xl overflow-hidden shadow-lg h-64 md:h-96 bg-gray-200 group">
+    <div id="carousel" class="flex transition-transform duration-500 h-full">
+        <div th:each="img : ${carouselImages}" class="min-w-full h-full relative">
+            <img th:src="${img.imageUrl}" class="w-full h-full object-cover" th:alt="${img.title}">
+            <div class="absolute bottom-0 left-0 bg-gradient-to-t from-black/70 to-transparent w-full p-6" th:if="${img.title != null}">
+                <h3 class="text-white text-2xl font-bold" th:text="${img.title}">Title</h3>
+            </div>
+        </div>
+    </div>
+    <script>
+        const carousel = document.getElementById('carousel');
+        const count = carousel.children.length;
+        let idx = 0;
+        if(count > 1) {
+            setInterval(() => { idx = (idx + 1) % count; carousel.style.transform = `translateX(-${idx * 100}%)`; }, 4000);
+        }
+    </script>
+</div>
+
+<div th:if="${not #lists.isEmpty(popularProducts)}" class="mb-12">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+        <i data-lucide="trending-up" class="text-red-500"></i> Most Selling Products
+    </h2>
+    <div class="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
+        <div th:each="product : ${popularProducts}" class="min-w-[250px] bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col relative group hover:shadow-md transition">
+            <a th:href="@{/product/{id}(id=${product.id})}" class="h-40 overflow-hidden bg-gray-50 relative rounded-t-xl block">
+                <img th:src="${product.imageUrl}" class="w-full h-full object-cover">
+                <span class="absolute top-2 left-2 bg-yellow-400 text-xs font-bold px-2 py-1 rounded text-gray-800">HOT</span>
+            </a>
+
+            <div class="p-4 flex flex-col flex-grow">
+                <a th:href="@{/product/{id}(id=${product.id})}" class="hover:text-indigo-600">
+                    <h3 class="font-bold text-gray-900 line-clamp-1" th:text="${product.name}">Name</h3>
+                </a>
+
+                <div class="flex justify-between items-end mt-auto pt-3">
+                    <div>
+                        <span class="text-xs text-gray-500 block" th:text="${product.soldQuantity} + ' Sold'">10 Sold</span>
+                        <span class="font-bold text-indigo-600" th:text="'MMK ' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">0</span>
+                    </div>
+
+                    <div sec:authorize="!hasRole('ADMIN')">
+                        <a th:if="${product.stockQuantity > 0}"
+                           th:attr="hx-get=@{/cart/add/{id}(id=${product.id})}"
+                           hx-target="#cart-nav-link"
+                           hx-swap="outerHTML"
+                           class="bg-gray-900 text-white p-2 rounded-lg hover:bg-indigo-600 transition cursor-pointer shadow-sm flex items-center justify-center">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                        </a>
+                        <button th:if="${product.stockQuantity < 1}" class="bg-gray-300 text-white p-2.5 rounded-lg cursor-not-allowed">
+                            <i data-lucide="slash" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+
+                    <div sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{/admin/product/edit/{id}(id=${product.id})}" class="text-gray-400 hover:text-indigo-600 p-2">
+                            <i data-lucide="edit" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="shop-content">
+
+    <div class="mb-8 flex gap-2 overflow-x-auto pb-2 border-b">
+        <a href="/"
+           th:attr="hx-get=@{/}"
+           hx-target="#shop-content"
+           hx-select="#shop-content"
+           hx-swap="outerHTML show:none"
+           hx-push-url="true"
+           th:class="${activeCategory == null} ? 'bg-indigo-600 text-white px-5 py-2 rounded-full font-medium shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 px-5 py-2 rounded-full font-medium transition'">
+            All Latest
+        </a>
+        <a th:each="cat : ${categories}"
+           th:href="@{/(categoryId=${cat.id})}"
+           th:attr="hx-get=@{/(categoryId=${cat.id})}"
+           hx-target="#shop-content"
+           hx-select="#shop-content"
+           hx-swap="outerHTML show:none"
+           hx-push-url="true"
+           th:text="${cat.name}"
+           th:class="${activeCategory == cat.id} ? 'bg-indigo-600 text-white px-5 py-2 rounded-full font-medium shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 px-5 py-2 rounded-full font-medium transition'">
+        </a>
+    </div>
+
+    <h2 class="text-2xl font-bold mb-6 text-gray-800" th:text="${sectionTitle}">Products</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div th:each="product : ${products}" class="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col group relative">
+
+            <a th:href="@{/product/{id}(id=${product.id})}" class="block h-56 overflow-hidden bg-gray-50 relative">
+                <div th:if="${product.stockQuantity < 1}" class="absolute inset-0 bg-white/60 z-10 flex items-center justify-center">
+                    <span class="bg-gray-800 text-white px-3 py-1 rounded font-bold">OUT OF STOCK</span>
+                </div>
+                <img th:src="${product.imageUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <span th:if="${product.salePrice != null}" class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">SALE</span>
+            </a>
+
+            <div class="p-5 flex flex-col flex-grow">
+                <div class="flex justify-between items-start mb-2">
+                    <a th:href="@{/product/{id}(id=${product.id})}" class="hover:text-indigo-600">
+                        <h3 class="font-bold text-lg text-gray-900 line-clamp-1" th:text="${product.name}">Name</h3>
+                    </a>
+                    <span class="text-xs font-bold text-indigo-500 bg-indigo-50 px-2 py-1 rounded-full" th:text="${product.category.name}">Cat</span>
+                </div>
+
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs text-gray-500" th:if="${product.stockQuantity > 0}" th:text="'Stock: ' + ${product.stockQuantity}">Stock: 10</span>
+                    <span class="text-xs text-red-500 font-bold" th:if="${product.stockQuantity < 1}">Sold Out</span>
+                </div>
+
+                <p class="text-gray-500 text-sm mb-4 line-clamp-2" th:text="${product.description}">Desc</p>
+
+                <div class="mt-auto flex justify-between items-end">
+                    <div>
+                        <div th:if="${product.salePrice != null}" class="flex flex-col">
+                            <span class="text-gray-400 line-through text-sm" th:text="'MMK ' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">MMK 100</span>
+                            <span class="text-xl font-bold text-red-600" th:text="'MMK ' + ${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 0, 'POINT')}">MMK 80</span>
+                        </div>
+                        <div th:unless="${product.salePrice != null}">
+                            <span class="text-xl font-bold text-gray-900" th:text="'MMK ' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">MMK 100</span>
+                        </div>
+                    </div>
+
+                    <div sec:authorize="!hasRole('ADMIN')">
+                        <a th:if="${product.stockQuantity > 0}"
+                           th:attr="hx-get=@{/cart/add/{id}(id=${product.id}, categoryId=${activeCategory})}"
+                           hx-target="#cart-nav-link"
+                           hx-swap="outerHTML"
+                           class="bg-gray-900 text-white p-2.5 rounded-lg hover:bg-indigo-600 transition-colors shadow-lg block cursor-pointer">
+                            <i data-lucide="plus" class="w-5 h-5"></i>
+                        </a>
+                        <button th:if="${product.stockQuantity < 1}" class="bg-gray-300 text-white p-2.5 rounded-lg cursor-not-allowed">
+                            <i data-lucide="slash" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+
+                    <div sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{/admin/product/edit/{id}(id=${product.id})}" class="text-gray-400 hover:text-indigo-600 p-2">
+                            <i data-lucide="edit" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${products.isEmpty()}" class="text-center py-20 text-gray-500">
+        <i data-lucide="package-open" class="w-16 h-16 mx-auto mb-4 text-gray-300"></i>
+        <p>No products found in this category.</p>
+    </div>
+</div>
+
+</body>
+</html>
