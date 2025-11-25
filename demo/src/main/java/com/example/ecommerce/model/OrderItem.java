@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "order_items")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,6 +23,8 @@ public class OrderItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Column
     private Integer quantity;
+    @Column
     private Integer price; // Changed to Integer
 }
