@@ -73,8 +73,8 @@ public class MainController {
     public String loginPage() { return "login"; }
 
     @PostMapping("/register")
-    public String register(String name, String email, String password, String address) {
-        if (userService.registerNewUser(name, email, password, address)) {
+    public String register(String name, String email, String password, String address,String phone_number) {
+        if (userService.registerNewUser(name, email, password, address,phone_number)) {
             return "redirect:/login?registered";
         }
         return "redirect:/login?error";
@@ -85,6 +85,29 @@ public class MainController {
         User user = userService.findByEmail(auth.getName()).orElseThrow();
         model.addAttribute("user", user);
         return "profile";
+    }
+
+    // --- ADDED THIS METHOD TO FIX PROFILE UPDATE ---
+    @PostMapping("/profile/update")
+    public String updateProfile(@RequestParam String name,
+                                @RequestParam String phoneNumber,
+                                @RequestParam String address,
+                                Authentication auth,
+                                RedirectAttributes redirectAttributes) {
+        // 1. Find current user
+        User user = userService.findByEmail(auth.getName()).orElseThrow();
+
+        // 2. Update fields
+        user.setName(name);
+        user.setPhoneNumber(phoneNumber);
+        user.setAddress(address);
+
+        // 3. Save to DB
+        userService.updateUser(user);
+
+        // 4. Add success message and redirect
+        redirectAttributes.addFlashAttribute("success", "Profile updated successfully!");
+        return "redirect:/profile";
     }
 
     // Standard Add to Cart (Redirets to Shop/Home)

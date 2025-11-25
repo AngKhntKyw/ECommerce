@@ -28,8 +28,13 @@ public class Product {
     private Integer soldQuantity = 0;
     @Column(name = "is_active")
     private Boolean isActive = true;
-    @Column
+
+    // CHANGED: switched to LONGTEXT to support very large descriptions (up to 4GB)
+    // The previous "TEXT" type was limited to ~64KB.
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
+
     @Column(name = "image_url")
     private String imageUrl;
     @ManyToOne

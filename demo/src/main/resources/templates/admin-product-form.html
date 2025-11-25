@@ -6,7 +6,7 @@
     <div th:replace="~{fragments :: sidebar}"></div>
 
     <main class="flex-1 p-8 bg-gray-50 overflow-y-auto flex justify-center">
-        <div class="w-full max-w-3xl">
+        <div class="w-full max-w-4xl"> <!-- Increased max-width for better writing space -->
             <div class="bg-white p-8 rounded-xl shadow-sm border">
                 <h2 class="text-2xl font-bold mb-6 text-gray-800" th:text="${product.id == null} ? 'Add New Product' : 'Update Product'">
                     Product Form
@@ -63,9 +63,12 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
                         <input type="text" th:field="*{imageUrl}" class="w-full p-2.5 border rounded-lg">
                     </div>
+
+                    <!-- CHANGED: Increased rows to 15 for long descriptions -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                        <textarea th:field="*{description}" rows="3" class="w-full p-2.5 border rounded-lg"></textarea>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Description (Detailed)</label>
+                        <textarea th:field="*{description}" rows="15" class="w-full p-3 border rounded-lg font-sans text-gray-700 leading-relaxed" placeholder="Write a very long description here..."></textarea>
+                        <p class="text-xs text-gray-500 mt-1 text-right">Supports long text</p>
                     </div>
 
                     <div class="flex gap-4 pt-2">

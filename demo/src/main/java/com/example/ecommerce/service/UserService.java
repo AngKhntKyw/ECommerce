@@ -15,11 +15,10 @@ public class UserService {
     private final UserRepository userRepo;
     private final PasswordEncoder passwordEncoder;
 
-    // Updated to accept Address
-    public boolean registerNewUser(String name, String email, String password, String address) {
+    // Updated to accept Phone Number
+    public boolean registerNewUser(String name, String email, String password, String address, String phoneNumber) {
         if (userRepo.findByEmail(email).isEmpty()) {
-            // Save with Address
-            User newUser = new User(null, name, email, passwordEncoder.encode(password), address, Role.USER);
+            User newUser = new User(null, name, email, passwordEncoder.encode(password), address, phoneNumber, Role.USER);
             userRepo.save(newUser);
             return true;
         }
@@ -30,7 +29,6 @@ public class UserService {
         return userRepo.findByEmail(email);
     }
 
-    // Update profile method (optional but good for Profile page)
     public void updateUser(User user) {
         userRepo.save(user);
     }

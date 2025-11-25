@@ -20,11 +20,15 @@ public class User {
 
     @Column(unique = true)
     private String email;
+
     @Column
     private String password;
 
     @Column
     private String address;
+
+    @Column(name = "phone_number")
+    private String phoneNumber; // New Field
 
     @Enumerated(EnumType.STRING)
     private Role role;

@@ -2,7 +2,7 @@
 //
 //import com.example.ecommerce.model.CarouselImage;
 //import com.example.ecommerce.model.Category;
-//import com.example.ecommerce.model.PaymentMethod;s
+//import com.example.ecommerce.model.PaymentMethod;
 //import com.example.ecommerce.model.Product;
 //import com.example.ecommerce.model.Role;
 //import com.example.ecommerce.model.User;
@@ -29,12 +29,12 @@
 //                           CarouselImageRepository carouselRepo,
 //                           PasswordEncoder encoder) {
 //        return args -> {
-//            // Users
+//            // Users - Updated constructors with Phone Numbers
 //            if (userRepo.findByEmail("admin@store.com").isEmpty()) {
-//                userRepo.save(new User(null, "Admin", "admin@store.com", encoder.encode("admin"), "Yangon, HQ", Role.ADMIN));
+//                userRepo.save(new User(null, "Admin", "admin@store.com", encoder.encode("admin"), "Yangon, HQ", "0911111111", Role.ADMIN));
 //            }
 //            if (userRepo.findByEmail("user@store.com").isEmpty()) {
-//                userRepo.save(new User(null, "User", "user@store.com", encoder.encode("password"), "Mandalay, 78th Street", Role.USER));
+//                userRepo.save(new User(null, "User", "user@store.com", encoder.encode("password"), "Mandalay, 78th Street", "0922222222", Role.USER));
 //            }
 //
 //            // Carousel Images
@@ -49,10 +49,9 @@
 //                Category fash = catRepo.save(new Category(null, "Fashion"));
 //                Category home = catRepo.save(new Category(null, "Home & Living"));
 //
-//                // Note: Added soldQuantity (0) to constructor
 //                productRepo.save(new Product(null, "Gaming Laptop", 2500000, 2300000, 2000000, 5, 0, true, "High-performance gaming laptop.", "https://images.unsplash.com/photo-1603302576837-637886400d40?w=500&q=80", ele));
-//                productRepo.save(new Product(null, "Wireless Earbuds", 85000, null, 50000, 20, 10, true, "Noise cancelling wireless earbuds.", "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&q=80", ele)); // Popular
-//                productRepo.save(new Product(null, "Cotton Hoodie", 35000, null, 20000, 50, 8, true, "Comfortable black cotton hoodie.", "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=500&q=80", fash)); // Popular
+//                productRepo.save(new Product(null, "Wireless Earbuds", 85000, null, 50000, 20, 10, true, "Noise cancelling wireless earbuds.", "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&q=80", ele));
+//                productRepo.save(new Product(null, "Cotton Hoodie", 35000, null, 20000, 50, 8, true, "Comfortable black cotton hoodie.", "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=500&q=80", fash));
 //                productRepo.save(new Product(null, "Modern Desk Lamp", 45000, null, 25000, 2, 0, true, "Minimalist LED desk lamp.", "https://images.unsplash.com/photo-1507473883581-56751711a3fe?w=500&q=80", home));
 //            }
 //
