@@ -110,7 +110,6 @@ public class MainController {
             else model.addAttribute("success", message);
 
             // Add cartCount to model manually since we are returning a fragment directly
-            // (GlobalControllerAdvice might not trigger for fragments depending on config, safer to add)
             model.addAttribute("cartCount", cart.getSize());
 
             return "fragments :: cart-update";
@@ -130,6 +129,13 @@ public class MainController {
         return "redirect:/cart";
     }
 
+    // New route to remove just ONE instance of an item (for decrement button)
+    @GetMapping("/cart/remove-one/{id}")
+    public String removeOneFromCart(@PathVariable Long id) {
+        cart.removeOneItem(id); // Ensure this method exists in Service or implement logic here
+        return "redirect:/cart";
+    }
+
     @GetMapping("/cart")
     public String viewCart(Model model) {
         Map<Product, Long> groupedItems = cart.getItems().stream()
@@ -137,6 +143,7 @@ public class MainController {
 
         List<CartItemDto> cartDisplayItems = new ArrayList<>();
         for (Map.Entry<Product, Long> entry : groupedItems.entrySet()) {
+            // Now passing the Product object which has stockQuantity
             cartDisplayItems.add(new CartItemDto(entry.getKey(), entry.getValue().intValue()));
         }
 

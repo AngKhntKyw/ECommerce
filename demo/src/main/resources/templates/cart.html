@@ -5,6 +5,11 @@
 <div class="max-w-4xl mx-auto">
     <h1 class="text-3xl font-bold mb-6">Shopping Cart</h1>
 
+    <div th:if="${error}" class="mb-6 p-4 bg-red-100 border border-red-200 text-red-800 rounded-lg flex items-center gap-2">
+        <i data-lucide="alert-circle" class="w-5 h-5"></i>
+        <span th:text="${error}">Error message</span>
+    </div>
+
     <div th:if="${#lists.isEmpty(cartItems)}" class="text-center py-20 bg-white rounded-xl shadow-sm border">
         <i data-lucide="shopping-cart" class="w-16 h-16 mx-auto text-gray-300 mb-4"></i>
         <p class="text-gray-500 text-lg">Your cart is empty.</p>
@@ -15,26 +20,54 @@
 
         <div class="bg-white shadow rounded-lg overflow-hidden border mb-6">
             <div th:each="item : ${cartItems}" class="flex items-center justify-between p-6 border-b last:border-0">
-                <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 bg-gray-100 rounded-md overflow-hidden">
+                <div class="flex items-center gap-4 flex-1">
+                    <div class="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
                         <img th:src="${item.product.imageUrl}" class="w-full h-full object-cover">
                     </div>
                     <div>
                         <h3 class="font-semibold text-gray-800" th:text="${item.product.name}">Name</h3>
-                        <div class="text-gray-500 text-sm flex items-center gap-2">
-                            <span th:text="'MMK ' + ${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')}">Price</span>
-                            <span class="px-2 py-0.5 bg-gray-100 rounded text-gray-700 font-bold text-xs" th:text="'x' + ${item.quantity}">x2</span>
+                        <p class="text-gray-500" th:text="'MMK ' + ${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')}">Price</p>
+
+                        <!-- Stock Status -->
+                        <div class="text-xs mt-1">
+                            <span th:if="${item.product.stockQuantity > 5}" class="text-green-600">In Stock</span>
+                            <span th:if="${item.product.stockQuantity <= 5}" class="text-orange-500" th:text="'Only ' + ${item.product.stockQuantity} + ' left!'">Low Stock</span>
                         </div>
                     </div>
                 </div>
+
+                <!-- Quantity Controls -->
+                <div class="flex items-center gap-3 mr-6">
+                    <!-- Decrement -->
+                    <a th:href="@{/cart/remove-one/{id}(id=${item.product.id})}" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition">
+                        <i data-lucide="minus" class="w-4 h-4"></i>
+                    </a>
+
+                    <span class="font-bold text-gray-900 w-6 text-center" th:text="${item.quantity}">1</span>
+
+                    <!-- Increment (Disabled if stock reached) -->
+                    <div th:if="${item.quantity < item.product.stockQuantity}">
+                        <a th:href="@{/cart/add/{id}(id=${item.product.id})}" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                    <div th:if="${item.quantity >= item.product.stockQuantity}" title="Max stock reached">
+                        <button disabled class="w-8 h-8 rounded-full border border-gray-200 bg-gray-50 flex items-center justify-center text-gray-300 cursor-not-allowed">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remove Button -->
                 <div>
-                    <a th:href="@{/cart/remove/{id}(id=${item.product.id})}" class="text-red-500 hover:bg-red-50 p-2 rounded-full transition-colors flex items-center gap-1 text-sm font-medium">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i> Remove
+                    <a th:href="@{/cart/remove/{id}(id=${item.product.id})}" class="text-red-500 hover:bg-red-50 p-2 rounded-full transition-colors flex items-center gap-1 text-sm font-medium" title="Remove all">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
                     </a>
                 </div>
             </div>
         </div>
 
+        <!-- Payment Section (Same as before) -->
         <form th:action="@{/cart/checkout}" method="post" class="bg-white shadow rounded-lg overflow-hidden border p-6">
             <h3 class="text-lg font-bold text-gray-800 mb-4">Payment Method</h3>
             <div class="space-y-3 mb-6">

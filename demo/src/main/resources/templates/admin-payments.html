@@ -28,7 +28,8 @@
                     <table class="w-full text-left text-sm">
                         <thead class="bg-gray-100 border-b text-gray-600 uppercase tracking-wider">
                         <tr>
-                            <th class="p-4 w-16">ID</th> <th class="p-4">Logo</th>
+                            <th class="p-4 w-16">ID</th>
+                            <th class="p-4">Logo</th>
                             <th class="p-4">Name</th>
                             <th class="p-4">Phone Number</th>
                             <th class="p-4">Status</th>
@@ -37,12 +38,13 @@
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                         <tr th:each="pay : ${payments}" class="hover:bg-gray-50 transition-colors">
-                            <td class="p-4 text-gray-500 font-mono" th:text="${pay.id}">1</td> <td class="p-4">
-                            <img th:if="${pay.imageUrl}" th:src="${pay.imageUrl}" class="w-10 h-10 object-contain rounded bg-gray-50 border" alt="icon">
-                            <div th:unless="${pay.imageUrl}" class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center text-gray-400">
-                                <i data-lucide="image"></i>
-                            </div>
-                        </td>
+                            <td class="p-4 text-gray-500 font-mono" th:text="${pay.id}">1</td>
+                            <td class="p-4">
+                                <img th:if="${pay.imageUrl}" th:src="${pay.imageUrl}" class="w-10 h-10 object-contain rounded bg-gray-50 border" alt="icon">
+                                <div th:unless="${pay.imageUrl}" class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center text-gray-400">
+                                    <i data-lucide="image"></i>
+                                </div>
+                            </td>
                             <td class="p-4 font-medium text-gray-900" th:text="${pay.name}">Name</td>
                             <td class="p-4 text-gray-600 font-mono" th:text="${pay.phoneNumber}">09...</td>
                             <td class="p-4">
@@ -53,7 +55,9 @@
                                 <a th:href="@{/admin/payment/edit/{id}(id=${pay.id})}" class="text-indigo-600 hover:text-indigo-900 flex items-center gap-1">
                                     <i data-lucide="edit" class="w-4 h-4"></i> Edit
                                 </a>
-                                <a th:href="@{/admin/payment/delete/{id}(id=${pay.id})}" class="text-red-500 hover:text-red-700 flex items-center gap-1" onclick="return confirm('Are you sure?')">
+                                <a th:href="@{/admin/payment/delete/{id}(id=${pay.id})}"
+                                   class="text-red-500 hover:text-red-700 flex items-center gap-1"
+                                   hx-confirm="Are you sure?">
                                     <i data-lucide="trash-2" class="w-4 h-4"></i> Delete
                                 </a>
                             </td>

@@ -46,7 +46,12 @@
 
                 <div class="flex gap-4">
                     <div sec:authorize="!hasRole('ADMIN')" class="w-full">
-                        <a th:if="${product.stockQuantity > 0}" th:href="@{/cart/add/{id}(id=${product.id})}" class="w-full block text-center bg-gray-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-indigo-600 transition-all shadow-lg transform hover:-translate-y-1">
+                        <!-- FIXED: Added HTMX attributes to prevent full page reload and target only the cart icon -->
+                        <a th:if="${product.stockQuantity > 0}"
+                           th:attr="hx-get=@{/cart/add/{id}(id=${product.id})}"
+                           hx-target="#cart-nav-link"
+                           hx-swap="outerHTML"
+                           class="w-full block text-center bg-gray-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-indigo-600 transition-all shadow-lg transform hover:-translate-y-1 cursor-pointer">
                             Add to Cart
                         </a>
                         <button th:if="${product.stockQuantity < 1}" class="w-full bg-gray-200 text-gray-400 py-4 rounded-xl font-bold text-lg cursor-not-allowed">Sold Out</button>

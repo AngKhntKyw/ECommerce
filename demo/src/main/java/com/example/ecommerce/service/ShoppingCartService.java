@@ -9,6 +9,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -24,6 +25,14 @@ public class ShoppingCartService {
         items.removeIf(p -> p.getId().equals(productId));
     }
 
+    // NEW: Remove only one instance of the product
+    public void removeOneItem(Long productId) {
+        Optional<Product> productToRemove = items.stream()
+                .filter(p -> p.getId().equals(productId))
+                .findFirst();
+        productToRemove.ifPresent(items::remove);
+    }
+
     public void clear() {
         items.clear();
     }
@@ -34,14 +43,12 @@ public class ShoppingCartService {
                 .sum();
     }
 
-    // NEW: Count how many of a specific product are in the cart
     public int getCount(Long productId) {
         return (int) items.stream()
                 .filter(p -> p.getId().equals(productId))
                 .count();
     }
 
-    // NEW: Get total number of items for Badge
     public int getSize() {
         return items.size();
     }
