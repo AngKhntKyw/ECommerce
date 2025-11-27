@@ -51,7 +51,8 @@
                     <div class="text-left md:text-right">
                         <p class="text-xs text-gray-500 uppercase tracking-wide font-bold mb-1">Payment & Date</p>
                         <div class="flex items-center md:justify-end gap-2">
-                            <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded" th:text="${order.paymentMethod != null} ? ${order.paymentMethod} : 'Unknown'">VISA</span>
+                            <!-- CHANGED: Added .name to paymentMethod object -->
+                            <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded" th:text="${order.paymentMethod != null} ? ${order.paymentMethod.name} : 'Unknown'">VISA</span>
                         </div>
                         <p class="text-sm text-gray-500 mt-1" th:text="${#temporals.format(order.orderDate, 'MMM dd, yyyy HH:mm')}">Date</p>
                     </div>

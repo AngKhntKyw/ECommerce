@@ -36,7 +36,7 @@
                     </div>
                     <div>
                         <span class="block font-bold text-gray-900">Ship To</span>
-                        <span th:text="${order.user.name}">User</span>
+                        <span th:text="${order.user.address}">User</span>
                     </div>
                 </div>
 
@@ -51,7 +51,8 @@
             <div class="p-6">
                 <h4 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
                     <span th:text="${order.status == 'Confirmed' ? 'Arriving Soon' : 'Order Processing'}">Status</span>
-                    <span class="text-sm font-normal text-gray-500" th:text="'via ' + ${order.paymentMethod}">via PayPal</span>
+                    <!-- CHANGED: Added .name to paymentMethod -->
+                    <span class="text-sm font-normal text-gray-500" th:text="'via ' + ${order.paymentMethod != null ? order.paymentMethod.name : 'Unknown'}">via PayPal</span>
                 </h4>
 
                 <div class="space-y-4">

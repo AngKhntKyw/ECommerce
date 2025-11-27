@@ -19,21 +19,30 @@ public class UserOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
     @Column(name = "total_amount")
-    private Integer totalAmount; // Changed to Integer
+    private Integer totalAmount;
+
     @Column(name = "total_cost")
-    private Integer totalCost;   // Changed to Integer
+    private Integer totalCost;
+
     @Column(name = "order_date")
     private LocalDateTime orderDate;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OrderItem> items = new ArrayList<>();
+
     @Column
     private String status = "Pending";
-    @Column(name = "payment_method")
-    private String paymentMethod;
+
+    // CHANGED: From String to Entity Relationship
+    @ManyToOne
+    @JoinColumn(name = "payment_method_id")
+    private PaymentMethod paymentMethod;
 
     public String getProductNames() {
         if (items == null || items.isEmpty()) {

@@ -25,12 +25,10 @@ public class AdminController {
     private final ProductService productService;
     private final OrderService orderService;
     private final PaymentService paymentService;
-    private final CarouselService carouselService; // New Service
+    private final CarouselService carouselService;
 
     @GetMapping
     public String adminHome() { return "redirect:/admin/dashboard"; }
-
-    // ... (Keep Dashboard, Products, Categories, Orders, Payment methods as they are) ...
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
@@ -38,13 +36,13 @@ public class AdminController {
         model.addAttribute("totalProfit", orderService.getTotalProfit());
         model.addAttribute("totalOrders", orderService.getAllOrders().size());
         model.addAttribute("lowStockProducts", productService.getLowStockProducts());
-        model.addAttribute("recentOrders", orderService.getAllOrders().stream().sorted((a,b) -> b.getId().compareTo(a.getId())).limit(5).toList());
+
+        // OPTIMIZED: Removed .sorted() because getAllOrders() is now naturally sorted by service
+        model.addAttribute("recentOrders", orderService.getAllOrders().stream().limit(5).toList());
+
         model.addAttribute("activePage", "dashboard");
         return "admin-dashboard";
     }
-
-    // ... [Previous methods for Product, Category, Payment, Orders remain unchanged] ...
-    // Paste your existing methods here to keep file complete...
 
     // --- PRODUCTS ---
     @GetMapping("/products")
@@ -82,8 +80,13 @@ public class AdminController {
     }
     @GetMapping("/product/delete/{id}")
     public String deleteProduct(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        productService.deleteProduct(id);
-        redirectAttributes.addFlashAttribute("success", "Product deleted!");
+        try {
+            productService.deleteProduct(id);
+            redirectAttributes.addFlashAttribute("success", "Product deleted!");
+        } catch (Exception e) {
+            // Catches any exception, typically DataIntegrityViolationException (Foreign Key error)
+            redirectAttributes.addFlashAttribute("error", "Cannot delete product. It is part of an existing order or business constraint.");
+        }
         return "redirect:/admin/products";
     }
 
@@ -171,7 +174,7 @@ public class AdminController {
         return "redirect:/admin/payments";
     }
 
-    // --- CAROUSEL (NEW) ---
+    // --- CAROUSEL ---
     @GetMapping("/carousel")
     public String carouselManagement(Model model) {
         model.addAttribute("images", carouselService.getAllImages());

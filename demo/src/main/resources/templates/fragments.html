@@ -2,16 +2,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<aside th:fragment="sidebar" class="w-64 bg-gray-900 text-gray-300 flex-shrink-0 hidden md:block min-h-screen shadow-xl">
+<!-- UPDATED: bg-gray-900 changed to bg-indigo-900, text-gray-300 changed to text-indigo-200 -->
+<aside th:fragment="sidebar" class="w-64 bg-indigo-900 text-indigo-200 flex-shrink-0 hidden md:block min-h-screen shadow-xl">
     <div class="p-6 sticky top-16">
         <h2 class="text-2xl font-bold mb-8 text-white tracking-wide">Admin Panel</h2>
         <nav class="space-y-3">
-            <a href="/admin/dashboard" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-gray-800 hover:text-white" th:classappend="${activePage == 'dashboard'} ? 'bg-indigo-600 text-white' : ''"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</a>
-            <a href="/admin/carousel" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-gray-800 hover:text-white" th:classappend="${activePage == 'carousel'} ? 'bg-indigo-600 text-white' : ''"><i data-lucide="image" class="w-5 h-5"></i> Carousel</a>
-            <a href="/admin/products" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-gray-800 hover:text-white" th:classappend="${activePage == 'products'} ? 'bg-indigo-600 text-white' : ''"><i data-lucide="package" class="w-5 h-5"></i> Products</a>
-            <a href="/admin/categories" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-gray-800 hover:text-white" th:classappend="${activePage == 'categories'} ? 'bg-indigo-600 text-white' : ''"><i data-lucide="list" class="w-5 h-5"></i> Categories</a>
-            <a href="/admin/payments" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-gray-800 hover:text-white" th:classappend="${activePage == 'payments'} ? 'bg-indigo-600 text-white' : ''"><i data-lucide="credit-card" class="w-5 h-5"></i> Payments</a>
-            <a href="/admin/orders" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-gray-800 hover:text-white" th:classappend="${activePage == 'orders'} ? 'bg-indigo-600 text-white' : ''"><i data-lucide="shopping-bag" class="w-5 h-5"></i> Orders</a>
+            <!-- UPDATED: Active class changed to text-gray-900 (black) and bg-white -->
+            <a href="/admin/dashboard" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-indigo-800 hover:text-white" th:classappend="${activePage == 'dashboard'} ? 'bg-white text-gray-900' : ''"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</a>
+            <a href="/admin/carousel" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-indigo-800 hover:text-white" th:classappend="${activePage == 'carousel'} ? 'bg-white text-gray-900' : ''"><i data-lucide="image" class="w-5 h-5"></i> Carousel</a>
+            <a href="/admin/products" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-indigo-800 hover:text-white" th:classappend="${activePage == 'products'} ? 'bg-white text-gray-900' : ''"><i data-lucide="package" class="w-5 h-5"></i> Products</a>
+            <a href="/admin/categories" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-indigo-800 hover:text-white" th:classappend="${activePage == 'categories'} ? 'bg-white text-gray-900' : ''"><i data-lucide="list" class="w-5 h-5"></i> Categories</a>
+            <a href="/admin/payments" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-indigo-800 hover:text-white" th:classappend="${activePage == 'payments'} ? 'bg-white text-gray-900' : ''"><i data-lucide="credit-card" class="w-5 h-5"></i> Payments</a>
+            <a href="/admin/orders" class="block py-3 px-5 rounded-lg font-medium flex items-center gap-3 hover:bg-indigo-800 hover:text-white" th:classappend="${activePage == 'orders'} ? 'bg-white text-gray-900' : ''"><i data-lucide="shopping-bag" class="w-5 h-5"></i> Orders</a>
         </nav>
     </div>
 </aside>

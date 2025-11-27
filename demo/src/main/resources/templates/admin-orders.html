@@ -21,7 +21,12 @@
                         <th class="p-4">Order ID</th>
                         <th class="p-4">Status</th>
                         <th class="p-4">Customer</th>
-                        <th class="p-4">Date</th>
+                        <!-- ADDED: Sort Icon for Date -->
+                        <th class="p-4">
+                            <div class="flex items-center gap-1 text-gray-700">
+                                Date <i data-lucide="arrow-down" class="w-3 h-3"></i>
+                            </div>
+                        </th>
                         <th class="p-4">Total</th>
                         <th class="p-4 text-right">Action</th>
                     </tr>
@@ -38,7 +43,7 @@
                             <div class="font-medium text-gray-900" th:text="${o.user.name}">Name</div>
                             <div class="text-xs text-gray-500" th:text="${o.user.email}">Email</div>
                         </td>
-                        <td class="p-4" th:text="${#temporals.format(o.orderDate, 'MMM dd, HH:mm')}">Date</td>
+                        <td class="p-4 text-gray-600" th:text="${#temporals.format(o.orderDate, 'MMM dd, HH:mm')}">Date</td>
                         <td class="p-4 font-bold text-green-600" th:text="'MMK ' + ${#numbers.formatDecimal(o.totalAmount, 0, 'COMMA', 0, 'POINT')}">MMK 0</td>
                         <td class="p-4 text-right">
                             <a th:href="@{/admin/order/{id}(id=${o.id})}" class="text-indigo-600 hover:text-indigo-900 font-medium">View Details</a>

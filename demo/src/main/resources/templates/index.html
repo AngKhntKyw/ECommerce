@@ -74,48 +74,48 @@
     </button>
 </div>
 
-<div th:if="${not #lists.isEmpty(newArrivals)}" class="mb-12">
-    <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
-        <i data-lucide="sparkles" class="text-yellow-500"></i> New Arrivals
-    </h2>
-    <div class="flex gap-6 overflow-x-auto pb-4 scrollbar-hide p-1">
-        <div th:each="product : ${newArrivals}" class="min-w-[260px] w-[260px] bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col relative group hover:shadow-md transition h-full">
-            <a th:href="@{/product/{id}(id=${product.id})}" class="aspect-square overflow-hidden bg-gray-50 relative rounded-t-xl block">
-                <img th:src="${product.imageUrl}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
-                <span class="absolute top-2 right-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">NEW</span>
-            </a>
+<!--<div th:if="${not #lists.isEmpty(newArrivals)}" class="mb-12">-->
+<!--    <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">-->
+<!--        <i data-lucide="sparkles" class="text-yellow-500"></i> New Arrivals-->
+<!--    </h2>-->
+<!--    <div class="flex gap-6 overflow-x-auto pb-4 scrollbar-hide p-1">-->
+<!--        <div th:each="product : ${newArrivals}" class="min-w-[260px] w-[260px] bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col relative group hover:shadow-md transition h-full">-->
+<!--            <a th:href="@{/product/{id}(id=${product.id})}" class="aspect-square overflow-hidden bg-gray-50 relative rounded-t-xl block">-->
+<!--                <img th:src="${product.imageUrl}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">-->
+<!--                <span class="absolute top-2 right-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">NEW</span>-->
+<!--            </a>-->
 
-            <div class="p-4 flex flex-col flex-grow">
-                <a th:href="@{/product/{id}(id=${product.id})}" class="hover:text-indigo-600">
-                    <h3 class="font-bold text-gray-900 line-clamp-1" th:text="${product.name}">Name</h3>
-                </a>
+<!--            <div class="p-4 flex flex-col flex-grow">-->
+<!--                <a th:href="@{/product/{id}(id=${product.id})}" class="hover:text-indigo-600">-->
+<!--                    <h3 class="font-bold text-gray-900 line-clamp-1" th:text="${product.name}">Name</h3>-->
+<!--                </a>-->
 
-                <div class="flex justify-between items-end mt-auto pt-3">
-                    <span class="font-bold text-indigo-600" th:text="'MMK ' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">0</span>
+<!--                <div class="flex justify-between items-end mt-auto pt-3">-->
+<!--                    <span class="font-bold text-indigo-600" th:text="'MMK ' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">0</span>-->
 
-                    <div sec:authorize="!hasRole('ADMIN')">
-                        <a th:if="${product.stockQuantity > 0}"
-                           th:attr="hx-get=@{/cart/add/{id}(id=${product.id}, categoryId=${activeCategory})}"
-                           hx-target="#cart-nav-link"
-                           hx-swap="outerHTML"
-                           class="bg-gray-900 text-white p-2 rounded-lg hover:bg-indigo-600 transition cursor-pointer shadow-sm flex items-center justify-center">
-                            <i data-lucide="plus" class="w-4 h-4"></i>
-                        </a>
-                        <button th:if="${product.stockQuantity < 1}" class="bg-gray-300 text-white p-2.5 rounded-lg cursor-not-allowed">
-                            <i data-lucide="slash" class="w-4 h-4"></i>
-                        </button>
-                    </div>
+<!--                    <div sec:authorize="!hasRole('ADMIN')">-->
+<!--                        <a th:if="${product.stockQuantity > 0}"-->
+<!--                           th:attr="hx-get=@{/cart/add/{id}(id=${product.id}, categoryId=${activeCategory})}"-->
+<!--                           hx-target="#cart-nav-link"-->
+<!--                           hx-swap="outerHTML"-->
+<!--                           class="bg-gray-900 text-white p-2 rounded-lg hover:bg-indigo-600 transition cursor-pointer shadow-sm flex items-center justify-center">-->
+<!--                            <i data-lucide="plus" class="w-4 h-4"></i>-->
+<!--                        </a>-->
+<!--                        <button th:if="${product.stockQuantity < 1}" class="bg-gray-300 text-white p-2.5 rounded-lg cursor-not-allowed">-->
+<!--                            <i data-lucide="slash" class="w-4 h-4"></i>-->
+<!--                        </button>-->
+<!--                    </div>-->
 
-                    <div sec:authorize="hasRole('ADMIN')">
-                        <a th:href="@{/admin/product/edit/{id}(id=${product.id})}" class="text-gray-400 hover:text-indigo-600 p-2">
-                            <i data-lucide="edit" class="w-4 h-4"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<!--                    <div sec:authorize="hasRole('ADMIN')">-->
+<!--                        <a th:href="@{/admin/product/edit/{id}(id=${product.id})}" class="text-gray-400 hover:text-indigo-600 p-2">-->
+<!--                            <i data-lucide="edit" class="w-4 h-4"></i>-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 
 <div th:if="${not #lists.isEmpty(popularProducts)}" class="mb-12">
     <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
