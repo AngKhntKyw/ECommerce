@@ -24,77 +24,102 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm border overflow-hidden mb-6">
-                <div class="p-6 border-b bg-gray-50 grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase tracking-wide font-bold mb-1">Customer</p>
-                        <h3 class="text-lg font-bold text-gray-800" th:text="${order.user.name}">Customer Name</h3>
-                        <p class="text-gray-500 text-sm flex items-center gap-1">
-                            <i data-lucide="mail" class="w-3 h-3"></i> <span th:text="${order.user.email}">email</span>
-                        </p>
-                        <p class="text-gray-500 text-sm flex items-center gap-1 mt-1">
-                            <i data-lucide="phone" class="w-3 h-3"></i>
-                            <span th:text="${order.user.phoneNumber != null} ? ${order.user.phoneNumber} : 'No Phone'">09...</span>
-                        </p>
-                    </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <!-- Order Details Column -->
+                <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border overflow-hidden">
+                    <div class="p-6 border-b bg-gray-50 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase tracking-wide font-bold mb-1">Customer</p>
+                            <h3 class="text-lg font-bold text-gray-800" th:text="${order.user.name}">Customer Name</h3>
+                            <p class="text-gray-500 text-sm flex items-center gap-1">
+                                <i data-lucide="mail" class="w-3 h-3"></i> <span th:text="${order.user.email}">email</span>
+                            </p>
+                            <p class="text-gray-500 text-sm flex items-center gap-1 mt-1">
+                                <i data-lucide="phone" class="w-3 h-3"></i>
+                                <span th:text="${order.user.phoneNumber != null} ? ${order.user.phoneNumber} : 'No Phone'">09...</span>
+                            </p>
+                        </div>
 
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase tracking-wide font-bold mb-1">Shipping Details</p>
-                        <div class="flex items-start gap-2 text-gray-700 text-sm">
-                            <i data-lucide="map-pin" class="w-4 h-4 mt-0.5 text-indigo-500 flex-shrink-0"></i>
-                            <span th:text="${order.user.address != null} ? ${order.user.address} : 'No address provided'">
-                                123 Main St, Yangon
-                            </span>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase tracking-wide font-bold mb-1">Shipping Details</p>
+                            <div class="flex items-start gap-2 text-gray-700 text-sm">
+                                <i data-lucide="map-pin" class="w-4 h-4 mt-0.5 text-indigo-500 flex-shrink-0"></i>
+                                <span th:text="${order.user.address != null} ? ${order.user.address} : 'No address provided'">
+                                    123 Main St, Yangon
+                                </span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="text-left md:text-right">
-                        <p class="text-xs text-gray-500 uppercase tracking-wide font-bold mb-1">Payment & Date</p>
-                        <div class="flex items-center md:justify-end gap-2">
-                            <!-- CHANGED: Added .name to paymentMethod object -->
-                            <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded" th:text="${order.paymentMethod != null} ? ${order.paymentMethod.name} : 'Unknown'">VISA</span>
-                        </div>
-                        <p class="text-sm text-gray-500 mt-1" th:text="${#temporals.format(order.orderDate, 'MMM dd, yyyy HH:mm')}">Date</p>
+                    <div class="p-0">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-gray-100 text-gray-600 border-b">
+                            <tr>
+                                <th class="p-4">Product</th>
+                                <th class="p-4 text-center">Price</th>
+                                <th class="p-4 text-center">Qty</th>
+                                <th class="p-4 text-right">Total</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                            <tr th:each="item : ${order.items}">
+                                <td class="p-4 flex items-center gap-4">
+                                    <div class="w-10 h-10 bg-gray-100 rounded border overflow-hidden flex-shrink-0">
+                                        <img th:src="${item.product.imageUrl}" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <div class="font-medium text-gray-900" th:text="${item.product.name}">Product Name</div>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-center text-gray-600" th:text="${item.price}">100</td>
+                                <td class="p-4 text-center font-bold" th:text="'x' + ${item.quantity}">x2</td>
+                                <td class="p-4 text-right font-medium text-gray-900" th:text="${item.price * item.quantity}">200</td>
+                            </tr>
+                            </tbody>
+                            <tfoot class="bg-gray-50">
+                            <tr>
+                                <td colspan="3" class="p-4 text-right font-bold text-gray-600">Total:</td>
+                                <td class="p-4 text-right font-bold text-xl text-indigo-600" th:text="'MMK ' + ${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')}">500</td>
+                            </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
 
-                <div class="p-0">
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-gray-100 text-gray-600 border-b">
-                        <tr>
-                            <th class="p-4">Product Details</th>
-                            <th class="p-4 text-center">Unit Price</th>
-                            <th class="p-4 text-center">Qty</th>
-                            <th class="p-4 text-right">Total</th>
-                        </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                        <tr th:each="item : ${order.items}">
-                            <td class="p-4 flex items-center gap-4">
-                                <div class="w-12 h-12 bg-gray-100 rounded border overflow-hidden flex-shrink-0">
-                                    <img th:src="${item.product.imageUrl}" class="w-full h-full object-cover">
+                <!-- Payment Proof Column -->
+                <div class="bg-white rounded-xl shadow-sm border p-6 h-fit">
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <i data-lucide="credit-card" class="text-indigo-600"></i> Payment Details
+                    </h3>
+
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-500 mb-1">Method</p>
+                        <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded" th:text="${order.paymentMethod != null} ? ${order.paymentMethod.name} : 'Unknown'">VISA</span>
+                    </div>
+
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-500 mb-1">Date</p>
+                        <p class="font-medium" th:text="${#temporals.format(order.orderDate, 'MMM dd, yyyy HH:mm')}">Date</p>
+                    </div>
+
+                    <div class="border-t pt-4 mt-4">
+                        <p class="text-sm text-gray-500 mb-2 font-bold">Payment Screenshot</p>
+
+                        <div th:if="${order.paymentScreenshot != null}">
+                            <a th:href="${order.paymentScreenshot}" target="_blank" class="block group relative overflow-hidden rounded-lg border bg-gray-100">
+                                <img th:src="${order.paymentScreenshot}" class="w-full object-contain max-h-64 hover:scale-105 transition-transform duration-300">
+                                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                    <i data-lucide="zoom-in" class="text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
                                 </div>
-                                <div>
-                                    <div class="font-medium text-gray-900" th:text="${item.product.name}">Product Name</div>
-                                    <div class="text-xs text-gray-500" th:text="${item.product.category.name}">Category</div>
-                                </div>
-                            </td>
-                            <td class="p-4 text-center text-gray-600" th:text="'MMK ' + ${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}">MMK 100</td>
-                            <td class="p-4 text-center font-bold" th:text="'x' + ${item.quantity}">x2</td>
-                            <td class="p-4 text-right font-medium text-gray-900" th:text="'MMK ' + ${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 0, 'POINT')}">MMK 200</td>
-                        </tr>
-                        </tbody>
-                        <tfoot class="bg-gray-50">
-                        <tr>
-                            <td colspan="3" class="p-4 text-right font-bold text-gray-600">Total Amount:</td>
-                            <td class="p-4 text-right font-bold text-xl text-indigo-600" th:text="'MMK ' + ${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')}">MMK 500</td>
-                        </tr>
-                        <tr class="text-xs text-gray-400">
-                            <td colspan="3" class="p-2 text-right">Estimated Profit:</td>
-                            <td class="p-2 text-right" th:text="'MMK ' + ${#numbers.formatDecimal(order.totalAmount - (order.totalCost != null ? order.totalCost : 0), 0, 'COMMA', 0, 'POINT')}">MMK 50</td>
-                        </tr>
-                        </tfoot>
-                    </table>
+                            </a>
+                            <p class="text-xs text-center text-gray-400 mt-2">Click to enlarge</p>
+                        </div>
+
+                        <div th:if="${order.paymentScreenshot == null}" class="bg-gray-50 border border-dashed border-gray-300 rounded-lg p-6 text-center text-gray-400">
+                            <i data-lucide="image-off" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+                            <p class="text-xs">No screenshot uploaded by customer.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 

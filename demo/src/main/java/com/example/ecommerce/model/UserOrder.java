@@ -39,10 +39,15 @@ public class UserOrder {
     @Column
     private String status = "Pending";
 
-    // CHANGED: From String to Entity Relationship
+    // From String to Entity Relationship
     @ManyToOne
     @JoinColumn(name = "payment_method_id")
     private PaymentMethod paymentMethod;
+
+    // Field to store payment screenshot (Base64 string)
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String paymentScreenshot;
 
     public String getProductNames() {
         if (items == null || items.isEmpty()) {

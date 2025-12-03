@@ -94,6 +94,13 @@ public class OrderService {
         orderRepo.save(order);
     }
 
+    //Save payment screenshot
+    public void updatePaymentScreenshot(Long orderId, String screenshotBase64) {
+        UserOrder order = getOrderById(orderId);
+        order.setPaymentScreenshot(screenshotBase64);
+        orderRepo.save(order);
+    }
+
     public UserOrder getOrderById(Long id) {
         return orderRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Order not found"));
     }
